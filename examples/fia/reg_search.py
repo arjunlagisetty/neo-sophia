@@ -386,8 +386,8 @@ def run_demo():
     search, agentic_search, generate_response = setup()
 
     with gr.Blocks() as demo:
-        gr.Markdown('# FIA Regulation Matching')
-        policy_selector = gr.Dropdown(memo_texts, label='Select a memorandum item:')
+        gr.Markdown('# FIA Regulation Search')
+        # policy_selector = gr.Dropdown(memo_texts, label='Select a memorandum item:')
         question_text = gr.Textbox('Memo item or question:', label='Search box', interactive=True)
         with gr.Row():
             quick_search_button = gr.Button('Quick Search')
@@ -397,11 +397,11 @@ def run_demo():
         regulation_texts = gr.Textbox('Output will appear here', interactive=False, label='Retrieved Documents')
         definition_texts = gr.Textbox('Definitions will appear here', interactive=False, label='Definitions')
 
-        policy_selector.change(
-            fn=lambda inp: 'Where is this discussed in the FIA regulations: ' + inp.split('::')[-1],
-            inputs=policy_selector,
-            outputs=question_text
-        )
+        # policy_selector.change(
+        #     fn=lambda inp: 'Where is this discussed in the FIA regulations: ' + inp.split('::')[-1],
+        #     inputs=policy_selector,
+        #     outputs=question_text
+        # )
 
         quick_search_button.click(
             fn=search,
