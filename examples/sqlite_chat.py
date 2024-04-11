@@ -57,6 +57,7 @@ def get_error_prompt(
     prompt += json.dumps(sql_error_dict)
     prompt += '\nReturn your answer by filling out the following template:\n'
     prompt += EXP_QUERY_TEMPLATE
+    print (prompt, '\n')
     return prompt
 
 
@@ -99,7 +100,7 @@ def get_user_agent_prompt(schema: str, table_name: str, question: str) -> str:
     prompt += f'Question: {question}\n\n'
     prompt += 'Return your answer by filling out the following template:\n'
     prompt += EXP_QUERY_TEMPLATE
-
+    print (prompt, '\n')
     return prompt
 
 
@@ -134,6 +135,7 @@ def get_db_agent_prompt(
     prompt += 'Use these pieces of information to answer the question.\n\n'
     prompt += get_question_result(
         question, query, explanation, result.to_string())
+    print (prompt, '\n')
     return prompt
 
 
