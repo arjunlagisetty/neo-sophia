@@ -213,26 +213,36 @@ def main(csv_file: str):
             'What are the unique states that customers live in?\n\n' +
             'What is the average of total assets across customers?\n\n'
         )
-        with gr.Row():
-            with gr.Column(scale=2):
-                gr.Markdown('## Query Result')
-                dataframe = gr.Dataframe(
-                    value=pd.read_sql_query(initial_query, conn))
-            with gr.Column():
-                gr.Markdown('## Schema')
-                schema_box = gr.Dataframe(value=schema)
 
-        query_text_box = gr.Textbox(value=initial_query, label='Last Query')
-        explanation_text_box = gr.Textbox(value=initial_explanation, label='Explanation')
-        chatbot = gr.Chatbot()
+        #declare and initilaize to none
+        chatbot = None
+        explanation_text_box = None
+        query_text_box = None
+        question = None
+
         question = gr.Textbox(
             value=DEFAULT_QUESTION, label='Ask a question about the data')
-
+        chatbot = gr.Chatbot()
         with gr.Row():
             with gr.Column():
                 ask_button = gr.Button('Ask')
             with gr.Column():
                 clear = gr.ClearButton([question, chatbot])
+        query_text_box = gr.Textbox(value=initial_query, label='Last Query')
+        explanation_text_box = gr.Textbox(value=initial_explanation, label='Explanation')
+        
+        
+
+    
+
+        with gr.Row():
+            with gr.Column(scale=2):
+                gr.Markdown('## Query Result')
+                dataframe = gr.Dataframe(
+                    value=pd.read_sql_query(initial_query, conn))
+            # with gr.Column():
+            #     gr.Markdown('## Schema')
+            #     schema_box = gr.Dataframe(value=schema)
 
         question.submit(
             respond,
