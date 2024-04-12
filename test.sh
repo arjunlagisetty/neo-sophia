@@ -13,4 +13,3 @@ pytest -s --tb=short \
 
 if [ "$(uname)" == "Darwin" ]; then
     open htmlcov/tests/index.html
-fi

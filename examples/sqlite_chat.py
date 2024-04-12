@@ -57,6 +57,7 @@ def get_error_prompt(
     prompt += json.dumps(sql_error_dict)
     prompt += '\nReturn your answer by filling out the following template:\n'
     prompt += EXP_QUERY_TEMPLATE
+    print (prompt, '\n')
     return prompt
 
 
@@ -99,7 +100,7 @@ def get_user_agent_prompt(schema: str, table_name: str, question: str) -> str:
     prompt += f'Question: {question}\n\n'
     prompt += 'Return your answer by filling out the following template:\n'
     prompt += EXP_QUERY_TEMPLATE
-
+    print (prompt, '\n')
     return prompt
 
 
@@ -134,6 +135,7 @@ def get_db_agent_prompt(
     prompt += 'Use these pieces of information to answer the question.\n\n'
     prompt += get_question_result(
         question, query, explanation, result.to_string())
+    print (prompt, '\n')
     return prompt
 
 
@@ -213,30 +215,35 @@ def main(csv_file: str):
             'What are the unique states that customers live in?\n\n' +
             'What is the average of total assets across customers?\n\n'
         )
-        with gr.Row():
-            with gr.Column(scale=2):
-                gr.Markdown('## Query Result')
-                dataframe = gr.Dataframe(
-                    value=pd.read_sql_query(initial_query, conn))
-            with gr.Column():
-                gr.Markdown('## Schema')
-                schema_box = gr.Dataframe(value=schema)
 
-        query_text_box = gr.Textbox(value=initial_query, label='Last Query')
-        explanation_text_box = gr.Textbox(
-            value=initial_explanation, label='Explanation',
-            lines=5,
-            max_lines=20
-        )
-        chatbot = gr.Chatbot()
+#declare and initilaize to none
+        chatbot = None
+        explanation_text_box = None
+        query_text_box = None
+        question = None
+
         question = gr.Textbox(
             value=DEFAULT_QUESTION, label='Ask a question about the data')
-
+        chatbot = gr.Chatbot()
         with gr.Row():
             with gr.Column():
                 ask_button = gr.Button('Ask')
             with gr.Column():
                 clear = gr.ClearButton([question, chatbot])
+        query_text_box = gr.Textbox(value=initial_query, label='Last Query')
+        explanation_text_box = gr.Textbox(value=initial_explanation, label='Explanation')
+        
+
+    
+
+        with gr.Row():
+            with gr.Column(scale=2):
+                gr.Markdown('## Query Result')
+                dataframe = gr.Dataframe(
+                    value=pd.read_sql_query(initial_query, conn))
+            # with gr.Column():
+            #     gr.Markdown('## Schema')
+            #     schema_box = gr.Dataframe(value=schema)
 
         question.submit(
             respond,
