@@ -84,12 +84,6 @@ class Message:
     The role and content attributes are required when preparing a message to pass
     to OpenAI.  The response message may contain either content or function_call
     in addition to role.
-    
-    Why is this a class?
-    - There will be multiple instances of messages.
-    - Each message has several attributes.
-    - The input format to an LLM API call and the output format are different,
-        so the class provides methods to handle simple formatting.
     """
     role: str
     content: str
@@ -111,11 +105,13 @@ class Message:
     def from_api_response(cls, response: dict):
         """Parse the API response."""
         role = response['choices'][0]['message']['role']
-        content = response['choices'][0]['message'].get('content', None)
+        content = response['choices'][0]['message'].get('content', '')
         name = response['choices'][0]['message'].get('name', None)
         function_call = response['choices'][0]['message'].get('function_call', None)
         if function_call is not None:
             function_call = function_call.to_dict()
+
+        content = '' if content is None else content
         return cls(role, content, name, function_call)
 
     @classmethod
@@ -129,7 +125,15 @@ def start_chat(model: str) -> Callable:
 
     def chat_func(messages: List[Message], *args, **kwargs) -> Message:
         input_messages = [message.as_dict() for message in messages]
-        response = oai.ChatCompletion.create(messages=input_messages, model=model, *args, **kwargs)
-        return Message.from_api_response(response)
+        try:
+            response = oai.ChatCompletion.create(
+                messages=input_messages,
+                model=model,
+                *args,
+                **kwargs
+            )
+            return Message.from_api_response(response)
+        except oai.APIError:
+            return Message('system', 'There was an API error.  Please try again.')
 
     return chat_func

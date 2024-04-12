@@ -1,21 +1,21 @@
 """
 Downloading and extracting rules from MSRB.
 """
-
 import os
 import re
 import pickle
+
 from typing import Dict, List, Tuple
 
-import click
 import fitz
+import click
 import requests
 import tqdm
 
+import examples.project as project
+
 from neosophia.llmtools import openaiapi as oaiapi
 from neosophia.datasets.msrb import Rule
-
-import examples.project as project
 
 opj = os.path.join
 
@@ -30,8 +30,8 @@ STATE_IF = 5
 
 EXCLUDE_RULES = ['Rule G-29', 'Rule G-35', 'Rule G-36', 'Rule A-6', 'Rule A-11']
 
-RULEBOOK_URL = 'https://www.msrb.org/sites/default/files/MSRB-Rule-Book-Current-Version.pdf'
-RULEBOOK_FILENAME = 'MSRB-Rule-Book-Current-Version.pdf'
+RULEBOOK_URL = 'https://www.msrb.org/sites/default/files/2023-10/MSRB-Rule-Book-October-2022_0.pdf'
+RULEBOOK_FILENAME = 'MSRB-Rule-Book-October-2022_0.pdf'
 
 
 def is_within_bounds(bbox: Tuple, data_bounds: Tuple) -> bool:
